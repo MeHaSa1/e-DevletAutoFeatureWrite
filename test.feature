@@ -1,6 +1,6 @@
 Feature: Arsa Metrekare Birim Değeri Sorgulama
 	Scenario Outline: Bu hizmeti kullanarak belediye sınırları içerisindeki cadde ve sokaklara ait arsa rayiç değerini (metrekare birim değeri) yıllara göre sorgulayabilirsiniz.
-		Given user is on the page
+		Given user is on the page "https://www.turkiye.gov.tr/kadikoy-belediyesi-arsa-rayic-degeri-sorgulama-v2"
 		When user enters "<value1>" to *Mahalle Adı
 		And user enters "<value2>" to Cadde/Sokak Adı
 		And user enters "<value3>" to *Yıl

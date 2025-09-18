@@ -29,12 +29,12 @@ public class FeatureWriter {
         int value = 0;
         if(inputNames.isEmpty()){
             feature.append("\tScenario: ").append(serviceDesc).append("\n");
-            feature.append("\t\tGiven user is on the page\n");
+            feature.append("\t\tGiven user is on the page \"").append(url).append("\"\n");
             feature.append("\t\tWhen user presses button");
         }
         else{
             feature.append("\tScenario Outline: ").append(serviceDesc).append("\n");
-            feature.append("\t\tGiven user is on the page\n");
+            feature.append("\t\tGiven user is on the page \"").append(url).append("\"\n");
             feature.append("\t\tWhen user enters \"<value1>\" to ").append(inputNames.getFirst()).append("\n");
             value++;
             for(String name : inputNames.subList(1, inputNames.size())){
