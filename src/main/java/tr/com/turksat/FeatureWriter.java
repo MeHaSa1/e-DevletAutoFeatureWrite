@@ -21,7 +21,7 @@ public class FeatureWriter {
         WebDriver driver = new ChromeDriver();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.manage().window().maximize();
-        boolean login = true;
+        boolean login = false;
         if(login){
             driver.get("https://giris.turkiye.gov.tr/Giris/gir");
             driver.findElement(By.id("tridField")).sendKeys("tc");
@@ -29,17 +29,17 @@ public class FeatureWriter {
             driver.findElement(By.name("submitButton")).click();
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("searchField")));
         }
-        String url = "https://www.turkiye.gov.tr/yok-ogrenci-belgesi-sorgulama";
+        String url = "https://www.turkiye.gov.tr/onikisubat-belediyesi-askidaki-imar-plani-sorgulama";
         driver.get(url);
         String serviceName = driver.findElement(By.xpath("//*[@id=\"pageContentBlock\"]/section[1]/div[1]/h2/em")).getText();
         feature.append("Feature: ").append(serviceName).append("\n");
         WebElement content = driver.findElement(By.id("contentStart"));
         String serviceDesc = content.findElement(By.className("richText")).getText();
         ArrayList<Input> inputs = new ArrayList<>();
-        List<String> buttonTypes = Arrays.asList("button","submit");
+        List<String> buttonTypes = Arrays.asList("button","submit","checkbox");
         List<String> textTypes = Arrays.asList("text","password");
         int valueCount = 0;
-        for(WebElement input : content.findElements(By.xpath(".//select | .//input | .//a"))) {
+        for(WebElement input : content.findElements(By.xpath(".//select[not(ancestor::table) and not(ancestor::nav)] | .//input[not(ancestor::table) and not(ancestor::nav)] | .//a[not(ancestor::table) and not(ancestor::nav)]"))) {
             if(!input.isDisplayed()) continue;
             if(input.getTagName().equals("select")){
                 inputs.add(new Input("select",getLabel(input)));
@@ -69,6 +69,14 @@ public class FeatureWriter {
             feature.append("\tScenario Outline: ").append(serviceDesc).append("\n");
         }
         feature.append("\t\tGiven user is on the page \"").append(url).append("\"\n");
+        for(WebElement element : driver.findElements(By.tagName("table"))){
+            String name = element.findElement(By.tagName("caption")).getText();
+            StringBuilder columns = new StringBuilder();
+            for(WebElement column : element.findElements(By.xpath("./thead/tr/th"))){
+                columns.append(column.getText()).append("/");
+            }
+            feature.append("\t\tThen user should see table ").append(name).append(" with columns:\"").append(columns).append("\"\n");
+        }
         if(!inputs.isEmpty()){
             feature.append("\t\tWhen ").append(toStepText(inputs.getFirst())).append("\n");
         }
